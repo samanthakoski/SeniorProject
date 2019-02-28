@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">snrProj</string>
+    <string name="login">Login</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="title_activity_main_maps">Map</string>
+    <string name="prof_details">Profile Details</string>
+    <string name="user_name">Name</string>
+    <string name="profile">Your Profile</string>
+    <string name="navigation_drawer_open">Drawer Open</string>
+    <string name="navigation_drawer_close">Drawer Closed</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="new_user">New User?</string>
+</resources>
