@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,18 +20,22 @@ public class BaseActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private static final String TAG = "BASE_ACTIVITY";
+    private static final String BACK_STACK_ROOT_TAG = "Base_Activity_Root";
+    private FragmentManager fragManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-
+        Log.i(TAG, "Base Activity created");
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
+        fragManager = getSupportFragmentManager();
 
         this.drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle =
@@ -40,7 +45,6 @@ public class BaseActivity extends AppCompatActivity {
                         R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -72,11 +76,29 @@ public class BaseActivity extends AppCompatActivity {
                 break;
         }
         if (fragment != null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame, fragment);
-            ft.commit();
+            fragManager.popBackStack(BACK_STACK_ROOT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fragManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .addToBackStack(BACK_STACK_ROOT_TAG)
+                    .commit();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
     }
+
+    public FragmentManager getFragManager() {
+        return fragManager;
+    }
+
+    /**
+     * Add a fragment on top of the current tab
+
+    public void addFragmentOnTop(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+     */
 }
